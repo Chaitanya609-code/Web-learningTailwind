@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Support Desk</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="bg-blue-600 text-white p-4 shadow">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <h1 class="text-xl md:text-2xl font-bold">
+                Student Support Desk
+            </h1>
+
+            <span class="text-sm">
+                Help & Support
+            </span>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto p-4 md:p-8">
+
+        <!-- Header -->
+        <div class="mb-6">
+            <h2 class="text-3xl font-bold text-gray-800">
+                Support Dashboard
+            </h2>
+            <p class="text-gray-500 mt-1">
+                Create and track your support requests.
+            </p>
+        </div>
+
+        <!-- Statistics -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+
+            <div class="bg-white p-5 rounded-xl shadow">
+                <p class="text-gray-500">Total Tickets</p>
+                <h3 id="totalTickets" class="text-3xl font-bold text-blue-600">
+                    0
+                </h3>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl shadow">
+                <p class="text-gray-500">Open Tickets</p>
+                <h3 id="openTickets" class="text-3xl font-bold text-orange-500">
+                    0
+                </h3>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl shadow">
+                <p class="text-gray-500">Resolved Tickets</p>
+                <h3 id="resolvedTickets" class="text-3xl font-bold text-green-600">
+                    0
+                </h3>
+            </div>
+
+        </div>
+
+        <!-- Ticket Form -->
+        <div class="bg-white p-6 rounded-xl shadow mb-6">
+
+            <h3 class="text-xl font-bold mb-4">
+                Create New Ticket
+            </h3>
+
+            <form id="ticketForm">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                    <input
+                        id="studentName"
+                        type="text"
+                        placeholder="Student Name"
+                        class="border rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none"
+                        required
+                    >
+
+                    <input
+                        id="subject"
+                        type="text"
+                        placeholder="Issue Subject"
+                        class="border rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none"
+                        required
+                    >
+
+                </div>
+
+                <textarea
+                    id="description"
+                    placeholder="Describe your problem..."
+                    class="w-full border rounded-lg p-3 mt-4 h-28 focus:ring-2 focus:ring-blue-500 outline-none"
+                    required
+                ></textarea>
+
+                <select
+                    id="priority"
+                    class="w-full border rounded-lg p-3 mt-4"
+                >
+                    <option value="Low">Low Priority</option>
+                    <option value="Medium">Medium Priority</option>
+                    <option value="High">High Priority</option>
+                </select>
+
+                <button
+                    type="submit"
+                    class="mt-4 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
+                >
+                    Submit Ticket
+                </button>
+
+            </form>
+        </div>
+
+        <!-- Tickets -->
+        <div class="bg-white p-6 rounded-xl shadow">
+
+            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-3 mb-4">
+
+                <h3 class="text-xl font-bold">
+                    My Tickets
+                </h3>
+
+                <input
+                    id="search"
+                    type="text"
+                    placeholder="Search tickets..."
+                    class="border rounded-lg p-2 px-4"
+                >
+
+            </div>
+
+            <div id="ticketList" class="space-y-4"></div>
+
+        </div>
+
+    </main>
+
+    <script>
+
+        let tickets = [];
+
+        const form = document.getElementById("ticketForm");
+        const ticketList = document.getElementById("ticketList");
+        const search = document.getElementById("search");
+
+        // Create ticket
+        form.addEventListener("submit", function(event) {
+
+            event.preventDefault();
+
+            const ticket = {
+                id: Date.now(),
+                name: document.getElementById("studentName").value,
+                subject: document.getElementById("subject").value,
+                description: document.getElementById("description").value,
+                priority: document.getElementById("priority").value,
+                status: "Open"
+            };
+
+            tickets.push(ticket);
+
+            form.reset();
+
+            displayTickets();
+        });
+
+
+        // Display tickets
+        function displayTickets() {
+
+            const keyword = search.value.toLowerCase();
+
+            ticketList.innerHTML = "";
+
+            const filteredTickets = tickets.filter(ticket =>
+                ticket.subject.toLowerCase().includes(keyword) ||
+                ticket.name.toLowerCase().includes(keyword)
+            );
+
+            filteredTickets.forEach(ticket => {
+
+                const div = document.createElement("div");
+
+                div.className =
+                    "border rounded-xl p-4 hover:shadow-md transition";
+
+                div.innerHTML = `
+                    <div class="flex flex-col md:flex-row md:justify-between gap-3">
+
+                        <div>
+                            <h4 class="text-lg font-bold text-gray-800">
+                                ${ticket.subject}
+                            </h4>
+
+                            <p class="text-sm text-gray-500">
+                                Student: ${ticket.name}
+                            </p>
+
+                            <p class="text-gray-600 mt-2">
+                                ${ticket.description}
+                            </p>
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+
+                            <span class="px-3 py-1 rounded-full text-sm
+                                ${ticket.priority === "High"
+                                    ? "bg-red-100 text-red-600"
+                                    : ticket.priority === "Medium"
+                                    ? "bg-yellow-100 text-yellow-600"
+                                    : "bg-green-100 text-green-600"}">
+                                ${ticket.priority}
+                            </span>
+
+                            <span class="px-3 py-1 rounded-full text-sm text-center
+                                ${ticket.status === "Open"
+                                    ? "bg-blue-100 text-blue-600"
+                                    : "bg-green-100 text-green-600"}">
+                                ${ticket.status}
+                            </span>
+
+                            <button
+                                onclick="toggleStatus(${ticket.id})"
+                                class="bg-gray-800 text-white px-3 py-2 rounded-lg hover:bg-gray-900">
+                                ${ticket.status === "Open"
+                                    ? "Mark Resolved"
+                                    : "Reopen"}
+                            </button>
+
+                            <button
+                                onclick="deleteTicket(${ticket.id})"
+                                class="bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600">
+                                Delete
+                            </button>
+
+                        </div>
+
+                    </div>
+                `;
+
+                ticketList.appendChild(div);
+            });
+
+            updateStatistics();
+        }
+
+
+        // Change ticket status
+        function toggleStatus(id) {
+
+            const ticket = tickets.find(ticket => ticket.id === id);
+
+            if (ticket.status === "Open") {
+                ticket.status = "Resolved";
+            } else {
+                ticket.status = "Open";
+            }
+
+            displayTickets();
+        }
+
+
+        // Delete ticket
+        function deleteTicket(id) {
+
+            tickets = tickets.filter(ticket => ticket.id !== id);
+
+            displayTickets();
+        }
+
+
+        // Search tickets
+        search.addEventListener("input", displayTickets);
+
+
+        // Update statistics
+        function updateStatistics() {
+
+            document.getElementById("totalTickets").textContent =
+                tickets.length;
+
+            document.getElementById("openTickets").textContent =
+                tickets.filter(ticket => ticket.status === "Open").length;
+
+            document.getElementById("resolvedTickets").textContent =
+                tickets.filter(ticket => ticket.status === "Resolved").length;
+        }
+
+    </script>
+
+</body>
+</html>
