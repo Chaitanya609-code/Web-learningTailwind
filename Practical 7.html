@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive FAQ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen py-10">
+
+    <div class="max-w-2xl mx-auto px-4">
+
+        <h1 class="text-3xl font-bold text-center text-blue-600 mb-8">
+            Frequently Asked Questions
+        </h1>
+
+        <!-- FAQ 1 -->
+        <div class="bg-white rounded-lg shadow-md mb-4">
+            <button class="question w-full text-left p-5 font-semibold text-gray-800
+                           hover:bg-blue-50">
+                What are the college timings?
+            </button>
+
+            <div class="answer hidden px-5 pb-5 text-gray-600">
+                College timings are from 9:00 AM to 4:00 PM.
+            </div>
+        </div>
+
+        <!-- FAQ 2 -->
+        <div class="bg-white rounded-lg shadow-md mb-4">
+            <button class="question w-full text-left p-5 font-semibold text-gray-800
+                           hover:bg-blue-50">
+                How can I apply for admission?
+            </button>
+
+            <div class="answer hidden px-5 pb-5 text-gray-600">
+                Students can apply through the college admission portal.
+            </div>
+        </div>
+
+        <!-- FAQ 3 -->
+        <div class="bg-white rounded-lg shadow-md mb-4">
+            <button class="question w-full text-left p-5 font-semibold text-gray-800
+                           hover:bg-blue-50">
+                Where can I check my results?
+            </button>
+
+            <div class="answer hidden px-5 pb-5 text-gray-600">
+                Students can check their results through the student portal.
+            </div>
+        </div>
+
+        <!-- FAQ 4 -->
+        <div class="bg-white rounded-lg shadow-md mb-4">
+            <button class="question w-full text-left p-5 font-semibold text-gray-800
+                           hover:bg-blue-50">
+                How can I contact the department?
+            </button>
+
+            <div class="answer hidden px-5 pb-5 text-gray-600">
+                You can contact the department office during working hours.
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const questions = document.querySelectorAll(".question");
+
+        questions.forEach(function(question) {
+
+            question.addEventListener("click", function() {
+
+                const answer = this.nextElementSibling;
+
+                answer.classList.toggle("hidden");
+
+            });
+
+        });
+    </script>
+
+</body>
+</html>
